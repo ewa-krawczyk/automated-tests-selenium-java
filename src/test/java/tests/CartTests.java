@@ -1,21 +1,26 @@
-import org.junit.jupiter.api.*;
-import pageobjects.CartPage;
-import pageobjects.ProductPage;
+package tests;
 
-public class CartTests extends BaseTest {
+import org.junit.jupiter.api.*;
+import pageObjects.CartPage;
+import pageObjects.ProductPage;
+
+
+public class CartTests  extends tests.BaseTest {
+
     String calculusSlug = "/calculus-made-easy-by-silvanus-p-thompson/";
+
     String historyOfAstronomySlug = "/history-of-astronomy-by-george-forbes/";
 
     @Test
-    public void no_product_added_to_cart_should_cart_be_empty() {
-        CartPage cartPage = new CartPage(browser).go();
+    public void noProductAddedToCartShouldCartBeEmpty() {
+        CartPage cartPage = new CartPage(driver).go();
 
         Assertions.assertEquals(0, cartPage.getNumberOfProducts(),
                 "Number of products in cart is not 0.");
     }
     @Test
-    public void product_added_to_cart_should_cart_have_one_product() {
-        ProductPage productPage = new ProductPage(browser);
+    public void productAddedToCartShouldCartHaveOneProduct() {
+        ProductPage productPage = new ProductPage(driver);
         CartPage cartPage = productPage.go(calculusSlug).addToCart().goToCart();
         int numberOfProducts = cartPage.getNumberOfProducts();
 
@@ -25,8 +30,8 @@ public class CartTests extends BaseTest {
     }
 
     @Test
-    public void two_products_added_to_cart_should_cart_have_two_products() {
-        ProductPage productPage = new ProductPage(browser);
+    public void twoProductsAddedToCartShouldCartHaveTwoProducts() {
+        ProductPage productPage = new ProductPage(driver);
         CartPage cartPage = productPage
                 .go(calculusSlug).addToCart()
                 .go(historyOfAstronomySlug).addToCart().goToCart();
@@ -38,8 +43,8 @@ public class CartTests extends BaseTest {
     }
 
     @Test
-    public void changing_quantity_in_cart_should_change_total_price() {
-        ProductPage productPage = new ProductPage(browser);
+    public void changingQuantityInCartShouldChangeTotalPrice() {
+        ProductPage productPage = new ProductPage(driver);
         CartPage cartPage = productPage
                 .go(calculusSlug)
                 .addToCart()
@@ -52,8 +57,8 @@ public class CartTests extends BaseTest {
     }
 
     @Test
-    public void changing_quantity_in_cart_to_negative_should_not_update_total_price() {
-        ProductPage productPage = new ProductPage(browser);
+    public void changingQuantityInCartToNegativeShouldNotUpdateTotalPrice() {
+        ProductPage productPage = new ProductPage(driver);
         CartPage cartPage = productPage
                 .go(calculusSlug)
                 .addToCart()
