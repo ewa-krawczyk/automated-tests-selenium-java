@@ -2,6 +2,7 @@ package tests;
 
 import org.junit.jupiter.api.*;
 import pageObjects.CartPage;
+import pageObjects.MainPage;
 import pageObjects.ProductPage;
 
 
@@ -68,5 +69,12 @@ public class CartTests  extends tests.BaseTest {
         Assertions.assertEquals("13,00 €",
                 cartPage.getTotalPrice(),
                 "Total price after quantity update is not what expected.");
+    }
+    @Test
+    public void clickingOnEmptyCartShouldDisplayEmptyCartMessage() {
+        MainPage mainPage = new MainPage(driver);
+        mainPage.go().storeHeader.clickOnCart();
+
+        mainPage.validateMessageOnEmptyCart();
     }
 }

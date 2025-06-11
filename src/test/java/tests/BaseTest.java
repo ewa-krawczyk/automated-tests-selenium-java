@@ -25,6 +25,7 @@ public class BaseTest {
         } catch (NoSuchBrowserException e) {
             throw new RuntimeException(e);
         }
+        driver.manage().window().maximize();
     }
     @AfterEach
     public void quitDriver() {
