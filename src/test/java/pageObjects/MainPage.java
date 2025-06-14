@@ -11,6 +11,8 @@ import java.time.Duration;
 
 public class MainPage extends pageObjects.BasePage {
     public final pageObjects.StoreHeaderComponent storeHeader;
+    private By searchFieldInputLocator = By.xpath("//*[contains(@id, 'wc-block-search__input')]");
+    private By searchButtonLocator = By.xpath("//button[contains(@class, 'wc-block-product-search__button')]");
 
     public MainPage(WebDriver driver) {
         super(driver);
@@ -28,5 +30,17 @@ public class MainPage extends pageObjects.BasePage {
                 By.cssSelector(".wc-block-mini-cart__empty-cart-wrapper p strong")));
         messageText.getText();
         Assertions.assertEquals("Your cart is currently empty!", messageText.getText(), "The message is not correct");
+    }
+
+    public void searchProduct(final String searchProductName) {
+        WebElement searchField = driver.findElement(searchFieldInputLocator);
+        searchField.sendKeys(searchProductName);
+        WebElement searchButton = driver.findElement(searchButtonLocator);
+        searchButton.click();
+    }
+
+    public void validateSearchedProductIsCorrect(final String expectedProductName) {
+        String actualProductName = driver.findElement(By.xpath("//*[contains(@class, 'product_title entry-title')]")).getText();
+        Assertions.assertEquals(actualProductName, expectedProductName, "The searched product is not correct. Expected to find: " + expectedProductName + " but got: " + actualProductName);
     }
 }
