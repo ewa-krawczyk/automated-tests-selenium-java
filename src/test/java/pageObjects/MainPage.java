@@ -39,8 +39,5 @@ public class MainPage extends pageObjects.BasePage {
         searchButton.click();
     }
 
-    public void validateSearchedProductIsCorrect(final String expectedProductName) {
-        String actualProductName = driver.findElement(By.xpath("//*[contains(@class, 'product_title entry-title')]")).getText();
-        Assertions.assertEquals(actualProductName, expectedProductName, "The searched product is not correct. Expected to find: " + expectedProductName + " but got: " + actualProductName);
-    }
+
 }

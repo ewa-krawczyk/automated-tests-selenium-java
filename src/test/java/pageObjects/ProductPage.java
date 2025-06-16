@@ -1,5 +1,6 @@
 package pageObjects;
 
+import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -38,5 +39,9 @@ public class ProductPage extends pageObjects.BasePage {
         driver.findElement(addToWishList).click();
         waitForLoadingIconDisappear();
         return this;
+    }
+    public void validateTitleProductIsCorrect(final String expectedProductName) {
+        String actualProductName = driver.findElement(By.xpath("//*[contains(@class, 'product_title entry-title')]")).getText();
+        Assertions.assertEquals(actualProductName, expectedProductName, "The searched product is not correct. Expected to find: " + expectedProductName + " but got: " + actualProductName);
     }
 }
