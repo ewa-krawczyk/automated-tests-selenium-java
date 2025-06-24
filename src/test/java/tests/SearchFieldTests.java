@@ -16,4 +16,12 @@ public class SearchFieldTests extends tests.BaseTest {
         ProductPage productPage = new ProductPage(driver);
         productPage.validateTitleProductIsCorrect("How to Do Chemical Tricks by A. Anderson");
     }
+
+    @Test
+    public void shouldNotDisplayProductsWhenSearchTitleDoesNotExist() {
+        MainPage mainPage = new MainPage(driver);
+        mainPage.go();
+        mainPage.searchProduct("There is no such title");
+        mainPage.validateProductListsIsEmpty();
+    }
 }
