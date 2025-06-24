@@ -8,6 +8,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
 
 public class MainPage extends pageObjects.BasePage {
     public final pageObjects.StoreHeaderComponent storeHeader;
@@ -39,5 +40,11 @@ public class MainPage extends pageObjects.BasePage {
         searchButton.click();
     }
 
+    public void validateProductListsIsEmpty() {
+        List<WebElement> messages = driver.findElements(By.xpath("//*[contains(@class, 'woocommerce-no-products-found')]"));
+        Assertions.assertFalse(messages.isEmpty(), "Expected 'no products found' message, but none was displayed.");
 
+        String messageText = messages.get(0).getText();
+        Assertions.assertEquals("No products were found matching your selection.", messageText, "The message text is not correct.");
+    }
 }
