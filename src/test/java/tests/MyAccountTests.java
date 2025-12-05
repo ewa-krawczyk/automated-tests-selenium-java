@@ -7,7 +7,7 @@ import pageObjects.MyAccountPage;
 public class MyAccountTests extends BaseTest {
 
     @Test
-    public void logInToAdminAccount() {
+    public void logInToMyAccountWithValidCredentials() {
         String userName = "admin";
         MyAccountPage myAccountPage = new MyAccountPage(driver);
         myAccountPage.go();
