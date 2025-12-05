@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import pageObjects.MainPage;
 import pageObjects.ProductPage;
 
-
 public class SearchFieldTests extends tests.BaseTest {
 
     @Test

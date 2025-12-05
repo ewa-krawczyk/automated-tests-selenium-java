@@ -3,8 +3,6 @@ package pageObjects;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-import java.time.Duration;
-
 public class CartPage extends pageObjects.BasePage {
 
     private By productItem = By.cssSelector("tr.cart_item");
