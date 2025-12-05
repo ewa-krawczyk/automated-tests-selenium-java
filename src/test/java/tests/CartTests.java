@@ -5,7 +5,6 @@ import pageObjects.CartPage;
 import pageObjects.MainPage;
 import pageObjects.ProductPage;
 
-
 public class CartTests  extends tests.BaseTest {
 
     String calculusSlug = "/calculus-made-easy-by-silvanus-p-thompson/";
