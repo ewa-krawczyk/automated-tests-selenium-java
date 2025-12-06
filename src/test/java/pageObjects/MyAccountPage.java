@@ -40,4 +40,12 @@ public class MyAccountPage extends BasePage {
         messageText.getText();
         Assertions.assertEquals("Hello " + userName + " (not " + userName + "? Log out)", messageText.getText(), "The message is not correct");
     }
+
+    public void validateMessageAfterWrongLogin(String userName) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement messageText = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.cssSelector(".woocommerce-error")));
+        messageText.getText();
+        Assertions.assertEquals("Error: The username " + userName + " is not registered on this site. If you are unsure of your username, try your email address instead.", messageText.getText(), "The message is not correct");
+    }
 }

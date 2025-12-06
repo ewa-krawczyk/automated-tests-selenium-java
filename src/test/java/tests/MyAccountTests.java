@@ -15,4 +15,14 @@ public class MyAccountTests extends BaseTest {
 
         myAccountPage.validateMessageAfterLogIn(userName);
     }
+
+    @Test
+    public void logInToMyAccountWithInvalidCredentials() {
+        String userName = "wrongUserName";
+        MyAccountPage myAccountPage = new MyAccountPage(driver);
+        myAccountPage.go();
+        myAccountPage.logInToAdminAccount(userName, "wrongPassword");
+
+        myAccountPage.validateMessageAfterWrongLogin(userName);
+    }
 }
