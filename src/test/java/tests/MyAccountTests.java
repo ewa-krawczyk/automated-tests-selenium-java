@@ -6,12 +6,13 @@ import pageObjects.MyAccountPage;
 
 public class MyAccountTests extends BaseTest {
 
+    String userName = "admin";
+    String userPassword = "admin";
     @Test
     public void logInToMyAccountWithValidCredentials() {
-        String userName = "admin";
         MyAccountPage myAccountPage = new MyAccountPage(driver);
         myAccountPage.go();
-        myAccountPage.logInToAdminAccount(userName, "admin");
+        myAccountPage.logInToAdminAccount(userName, userPassword);
 
         myAccountPage.validateMessageAfterLogIn(userName);
     }
@@ -24,5 +25,14 @@ public class MyAccountTests extends BaseTest {
         myAccountPage.logInToAdminAccount(userName, "wrongPassword");
 
         myAccountPage.validateMessageAfterWrongLogin(userName);
+    }
+    @Test
+    public void checkMenuOptionsVisible() {
+        MyAccountPage myAccountPage = new MyAccountPage(driver);
+        myAccountPage.go();
+        myAccountPage.logInToAdminAccount(userName, userPassword);
+
+        myAccountPage.validateMenuOptionsVisible("Dashboard", "Orders", "Downloads", "Addresses", "Payment methods",
+                "Account details", "Logout");
     }
 }

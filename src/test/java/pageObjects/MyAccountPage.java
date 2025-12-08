@@ -8,17 +8,18 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
 
 public class MyAccountPage extends BasePage {
 
-    public final pageObjects.StoreHeaderComponent storeHeader;
+    public final StoreHeaderComponent storeHeader;
     private By userNameInputLocator = By.xpath("//input[contains(@id, 'username')]");
     private By passwordInputLocator = By.xpath("//input[contains(@id, 'password')]");
     private By logInButtonLocator = By.xpath("//button[contains(@name, 'login')]");
 
     public MyAccountPage(WebDriver driver) {
         super(driver);
-        storeHeader = new pageObjects.StoreHeaderComponent(driver);
+        storeHeader = new StoreHeaderComponent(driver);
     }
 
     public MyAccountPage go() {
@@ -38,7 +39,8 @@ public class MyAccountPage extends BasePage {
         WebElement messageText = wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.cssSelector(".woocommerce-MyAccount-content p:first-of-type")));
         messageText.getText();
-        Assertions.assertEquals("Hello " + userName + " (not " + userName + "? Log out)", messageText.getText(), "The message is not correct");
+        Assertions.assertEquals("Hello " + userName + " (not " + userName + "? Log out)", messageText.getText(),
+                "The message is not correct");
     }
 
     public void validateMessageAfterWrongLogin(String userName) {
@@ -46,6 +48,35 @@ public class MyAccountPage extends BasePage {
         WebElement messageText = wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.cssSelector(".woocommerce-error")));
         messageText.getText();
-        Assertions.assertEquals("Error: The username " + userName + " is not registered on this site. If you are unsure of your username, try your email address instead.", messageText.getText(), "The message is not correct");
+        Assertions.assertEquals(
+                "Error: The username " + userName + " is not registered on this site. If you are unsure of your username, try your email address instead.",
+                messageText.getText(), "The message is not correct");
+    }
+
+    public void validateMenuOptionsVisible(String... expectedNames) {
+        final List<WebElement> menuOptions = driver.findElement(
+                By.cssSelector(".woocommerce-MyAccount-navigation")).findElements(By.xpath("ul/li"));
+
+        if (menuOptions.size() != expectedNames.length) {
+            throw new AssertionError(
+                    "Invalid number of menu options." +
+                            "\nExpected: " + expectedNames.length +
+                            "\nActual: " + menuOptions.size()
+            );
+        }
+        for (int i = 0; i < menuOptions.size(); i++) {
+
+            WebElement option = menuOptions.get(i);
+            String actualText = option.getText().trim();
+            String expectedText = expectedNames[i];
+
+            if (!actualText.equals(expectedText)) {
+                throw new AssertionError(
+                        "Invalid menu name at position " + i +
+                                "\nExpected: " + expectedText +
+                                "\nActual: " + actualText
+                );
+            }
+        }
     }
 }
