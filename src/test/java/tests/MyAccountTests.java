@@ -6,8 +6,9 @@ import pageObjects.MyAccountPage;
 
 public class MyAccountTests extends BaseTest {
 
-    String userName = "admin";
-    String userPassword = "admin";
+    private static final String userName = "admin";
+    private static final String userPassword = "admin";
+
     @Test
     public void logInToMyAccountWithValidCredentials() {
         MyAccountPage myAccountPage = new MyAccountPage(driver);
@@ -26,6 +27,7 @@ public class MyAccountTests extends BaseTest {
 
         myAccountPage.validateMessageAfterWrongLogin(userName);
     }
+
     @Test
     public void checkMenuOptionsVisible() {
         MyAccountPage myAccountPage = new MyAccountPage(driver);
