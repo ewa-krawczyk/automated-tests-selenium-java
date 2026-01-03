@@ -41,6 +41,6 @@ public class WishListPage extends pageObjects.BasePage {
                 .click();
         wait.until(ExpectedConditions.stalenessOf(row));
 
-        return new WishListPage(this.driver);
+        return this;
     }
 }
