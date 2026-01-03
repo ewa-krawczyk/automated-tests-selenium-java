@@ -23,6 +23,9 @@ public class ProductPage extends pageObjects.BasePage {
         driver.get(baseURL + "/product/" + productSlug);
         return this;
     }
+    public String getNameOfProduct() {
+        return driver.findElement(By.xpath("//*[contains(@class, 'entry-summary')]/h1")).getText();
+    }
 
     public ProductPage addToCart() {
         driver.findElement(addToCart).click();
