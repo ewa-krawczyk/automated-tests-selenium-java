@@ -15,7 +15,7 @@ public class WishListPage extends pageObjects.BasePage {
     WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     private final By productItems = By.cssSelector(".wishlist-items-wrapper tr td.product-remove");
     private final String productItemsTable = "//*[contains(@class, 'wishlist-items-wrapper')]";
-    String removedMessageLocator = "//*[contains(@class, 'woocommerce-message')]";
+    private final String removedMessageLocator = "//*[contains(@class, 'woocommerce-message')]";
 
     protected WishListPage(WebDriver driver) {
         super(driver);
