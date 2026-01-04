@@ -1,5 +1,6 @@
 package pageObjects;
 
+import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -13,7 +14,8 @@ public class WishListPage extends pageObjects.BasePage {
 
     WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     private final By productItems = By.cssSelector(".wishlist-items-wrapper tr td.product-remove");
-    String productItemsTable = "//*[contains(@class, 'wishlist-items-wrapper')]";
+    private final String productItemsTable = "//*[contains(@class, 'wishlist-items-wrapper')]";
+    String removedMessageLocator = "//*[contains(@class, 'woocommerce-message')]";
 
     protected WishListPage(WebDriver driver) {
         super(driver);
@@ -39,7 +41,11 @@ public class WishListPage extends pageObjects.BasePage {
                 ));
         row.findElement(By.xpath(".//td[1]"))
                 .click();
-        wait.until(ExpectedConditions.stalenessOf(row));
+
+        WebElement message = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath(removedMessageLocator)));
+
+        Assertions.assertEquals("Product successfully removed.", message.getText(), "The message is not correct");
 
         return this;
     }
