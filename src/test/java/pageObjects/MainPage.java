@@ -5,9 +5,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MainPage extends pageObjects.BasePage {
@@ -41,10 +44,56 @@ public class MainPage extends pageObjects.BasePage {
     }
 
     public void validateProductListsIsEmpty() {
-        List<WebElement> messages = driver.findElements(By.xpath("//*[contains(@class, 'woocommerce-no-products-found')]"));
+        List<WebElement> messages = driver.findElements(
+                By.xpath("//*[contains(@class, 'woocommerce-no-products-found')]"));
         Assertions.assertFalse(messages.isEmpty(), "Expected 'no products found' message, but none was displayed.");
 
         String messageText = messages.get(0).getText();
-        Assertions.assertEquals("No products were found matching your selection.", messageText, "The message text is not correct.");
+        Assertions.assertEquals("No products were found matching your selection.", messageText,
+                "The message text is not correct.");
+    }
+
+
+    public void validatePriceSorting(String optionText) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        WebElement sortDropdown = driver.findElement(By.name("orderby"));
+        Select select = new Select(sortDropdown);
+        select.selectByVisibleText(optionText);
+
+        wait.until(ExpectedConditions.stalenessOf(sortDropdown));
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("ul.products li.product")));
+
+        List<Double> actualPrices = getPricesFromUI();
+        List<Double> expectedPrices = new ArrayList<>(actualPrices);
+
+        if (optionText.toLowerCase().contains("low to high")) {
+            Collections.sort(expectedPrices);
+            Assertions.assertEquals(expectedPrices, actualPrices, "BŁĄD: Ceny nie są ułożone od najniższej!");
+        }
+        else if (optionText.toLowerCase().contains("high to low")) {
+            Collections.sort(expectedPrices, Collections.reverseOrder());
+            Assertions.assertEquals(expectedPrices, actualPrices, "BŁĄD: Ceny nie są ułożone od najwyższej!");
+        }
+    }
+
+    private List<Double> getPricesFromUI() {
+        List<WebElement> productCards = driver.findElements(By.cssSelector("ul.products li.product"));
+        List<Double> prices = new ArrayList<>();
+
+        for (WebElement card : productCards) {
+            WebElement priceElement;
+
+            List<WebElement> salePrice = card.findElements(By.cssSelector("ins .woocommerce-Price-amount bdi"));
+
+            if (!salePrice.isEmpty()) {
+                priceElement = salePrice.get(0);
+            } else {
+                priceElement = card.findElement(By.cssSelector(".woocommerce-Price-amount bdi")); // Bierzemy zwykłą
+            }
+            String cleanPrice = priceElement.getText().replaceAll("[^\\d,.]", "").replace(",", ".");
+            prices.add(Double.valueOf(cleanPrice));
+        }
+        return prices;
     }
 }
