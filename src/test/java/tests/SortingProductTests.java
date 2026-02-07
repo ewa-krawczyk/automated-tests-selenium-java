@@ -3,7 +3,7 @@ package tests;
 import org.junit.jupiter.api.Test;
 import pageObjects.MainPage;
 
-public class SortingProductTests extends  BaseTest {
+public class SortingProductTests extends BaseTest {
 
 
     @Test
@@ -11,6 +11,7 @@ public class SortingProductTests extends  BaseTest {
         MainPage mainPage = new MainPage(this.driver).go();
         mainPage.validatePriceSorting("Sort by price: low to high");
     }
+
     @Test
     public void sortingByPriceHighToLowTest() {
         MainPage mainPage = new MainPage(this.driver).go();

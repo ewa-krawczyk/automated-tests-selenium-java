@@ -1,5 +1,7 @@
 package tests;
+
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pageObjects.MainPage;
 import pageObjects.ProductPage;
@@ -7,39 +9,44 @@ import pageObjects.WishListPage;
 
 public class WishListTests extends tests.BaseTest {
 
-    String calculusSlug = "/calculus-made-easy-by-silvanus-p-thompson/";
-    String historyOfAstronomySlug = "/history-of-astronomy-by-george-forbes/";
+    private WishListPage wishListPage;
 
+    @BeforeEach
+    public void navigateToWishList() {
+        wishListPage = new MainPage(driver).go().storeHeader.goToWishList();
+    }
 
     @Test
-    public void productAddedToWishlistShouldWishlistHaveOneItem() {
+    public void shouldAddProductToWishlistAndContainOneItem() {
         ProductPage productPage = new ProductPage(driver).go(calculusSlug);
 
-        WishListPage wishListPage = productPage.addToWishList().storeHeader.goToWishList();
+        wishListPage = productPage.addToWishList().storeHeader.goToWishList();
 
-        Assertions.assertEquals(1, wishListPage.getNumberOfProducts(), "Number of products in wishlist is not what expected.");
+        Assertions.assertEquals(1, wishListPage.getNumberOfProducts(),
+                "Wishlist should contain 1 product after adding.");
     }
 
     @Test
-    public void noProductAddedToWishlistShouldWishlistBeEmpty() {
-        MainPage mainPage = new MainPage(driver);
-        WishListPage wishListPage = mainPage.go().storeHeader.goToWishList();
-
-        Assertions.assertEquals(0, wishListPage.getNumberOfProducts(), "Number of products in wishlist is not what expected.");
+    public void shouldWishlistBeEmptyWhenNoProductsAdded() {
+        Assertions.assertEquals(0, wishListPage.getNumberOfProducts(),
+                "Wishlist should be empty when no products are added.");
     }
 
     @Test
-    public void removeAddedProductFromWishlist() {
+    public void shouldRemoveProductFromWishlistAndBeEmpty() {
         ProductPage productPage = new ProductPage(driver).go(historyOfAstronomySlug);
-        String productName =  productPage.getNameOfProduct();
-        WishListPage wishListPage = productPage.addToWishList().storeHeader.goToWishList();
+        String productName = productPage.getNameOfProduct();
 
-        Assertions.assertEquals(1, wishListPage.getNumberOfProducts(), "Number of products in wishlist is not what " +
-                "expected.");
+        wishListPage = productPage.addToWishList().storeHeader.goToWishList();
+        Assertions.assertEquals(1, wishListPage.getNumberOfProducts(),
+                "Wishlist should contain 1 product after adding.");
 
         wishListPage.removeAddedProductFromWishList(productName);
 
-        Assertions.assertEquals(0, wishListPage.getNumberOfProducts(), "Number of products in wishlist is not what " +
-                "expected.");
+        Assertions.assertEquals(0, wishListPage.getNumberOfProducts(),
+                "Wishlist should be empty after removing the product.");
+        // Verify that the specific product was removed (not just count)
+        Assertions.assertFalse(wishListPage.containsProduct(productName),
+                "Product '" + productName + "' should be removed from wishlist.");
     }
 }

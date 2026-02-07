@@ -24,6 +24,21 @@ public class WishListPage extends pageObjects.BasePage {
     }
 
 
+    public boolean containsProduct(String productName) {
+        try {
+            WebElement table = driver.findElement(By.xpath(productItemsTable));
+            return table.findElements(By.xpath("tr"))
+                    .stream()
+                    .anyMatch(tr ->
+                            tr.findElement(By.xpath("td[3]/a"))
+                                    .getText()
+                                    .contains(productName)
+                    );
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
+
     public WishListPage removeAddedProductFromWishList(String productName) {
         WebElement table = driver.findElement(By.xpath(productItemsTable));
         WebElement row = table.findElements(By.xpath("tr"))

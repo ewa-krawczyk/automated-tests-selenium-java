@@ -1,13 +1,12 @@
 package tests;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import pageObjects.CartPage;
 import pageObjects.MainPage;
 import pageObjects.ProductPage;
 
-public class CartTests  extends tests.BaseTest {
-
-    String calculusSlug = "/calculus-made-easy-by-silvanus-p-thompson/";
+public class CartTests extends tests.BaseTest {
 
     String historyOfAstronomySlug = "/history-of-astronomy-by-george-forbes/";
 
@@ -18,6 +17,7 @@ public class CartTests  extends tests.BaseTest {
         Assertions.assertEquals(0, cartPage.getNumberOfProducts(),
                 "Number of products in cart is not 0.");
     }
+
     @Test
     public void productAddedToCartShouldCartHaveOneProduct() {
         ProductPage productPage = new ProductPage(driver);
@@ -69,6 +69,34 @@ public class CartTests  extends tests.BaseTest {
                 cartPage.getTotalPrice(),
                 "Total price after quantity update is not what expected.");
     }
+
+    @Test
+    public void changingQuantityToZeroShouldRemoveProduct() {
+        ProductPage productPage = new ProductPage(driver);
+        CartPage cartPage = productPage
+                .go(calculusSlug)
+                .addToCart()
+                .goToCart()
+                .changeQuantity(0);
+
+        Assertions.assertEquals(0, cartPage.getNumberOfProducts(),
+                "Product should be removed when quantity is set to 0");
+    }
+
+    @Test
+    public void changingQuantityToLargeNumberShouldUpdatePrice() {
+        ProductPage productPage = new ProductPage(driver);
+        CartPage cartPage = productPage
+                .go(calculusSlug)
+                .addToCart()
+                .goToCart()
+                .changeQuantity(100);
+
+        Assertions.assertEquals("1300,00 €",
+                cartPage.getTotalPrice(),
+                "Total price should update correctly for large quantities");
+    }
+
     @Test
     public void clickingOnEmptyCartShouldDisplayEmptyCartMessage() {
         MainPage mainPage = new MainPage(driver);
