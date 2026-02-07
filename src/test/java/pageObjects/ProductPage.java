@@ -27,6 +27,10 @@ public class ProductPage extends pageObjects.BasePage {
         return driver.findElement(By.xpath("//*[contains(@class, 'entry-summary')]/h1")).getText();
     }
 
+    public String getProductPrice() {
+        return driver.findElement(By.cssSelector(".price")).getText();
+    }
+
     public ProductPage addToCart() {
         driver.findElement(addToCart).click();
         return this;

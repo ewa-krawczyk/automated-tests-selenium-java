@@ -14,6 +14,7 @@ public class WishListPage extends pageObjects.BasePage {
     WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     private final By productItems = By.cssSelector(".wishlist-items-wrapper tr td.product-remove");
     private final String productItemsTable = "//*[contains(@class, 'wishlist-items-wrapper')]";
+    private final By viewMyCartButton = By.xpath("//*[contains(@class, 'wc-block-mini-cart__footer-car')]/span");
 
     protected WishListPage(WebDriver driver) {
         super(driver);
@@ -23,21 +24,6 @@ public class WishListPage extends pageObjects.BasePage {
         return driver.findElements(productItems).size();
     }
 
-
-    public boolean containsProduct(String productName) {
-        try {
-            WebElement table = driver.findElement(By.xpath(productItemsTable));
-            return table.findElements(By.xpath("tr"))
-                    .stream()
-                    .anyMatch(tr ->
-                            tr.findElement(By.xpath("td[3]/a"))
-                                    .getText()
-                                    .contains(productName)
-                    );
-        } catch (NoSuchElementException e) {
-            return false;
-        }
-    }
 
     public WishListPage removeAddedProductFromWishList(String productName) {
         WebElement table = driver.findElement(By.xpath(productItemsTable));
@@ -57,5 +43,28 @@ public class WishListPage extends pageObjects.BasePage {
         wait.until(ExpectedConditions.stalenessOf(row));
 
         return this;
+    }
+
+    public pageObjects.CartPage addProductToCartFromWishList(String productName) {
+        WebElement table = driver.findElement(By.xpath(productItemsTable));
+        WebElement row = table.findElements(By.xpath("tr"))
+                .stream()
+                .filter(tr ->
+                        tr.findElement(By.xpath("td[3]/a"))
+                                .getText()
+                                .contains(productName)
+                )
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException(
+                        "Nie znaleziono produktu o nazwie: " + productName
+                ));
+
+        WebElement addToCartButton = row.findElement(
+                By.xpath("//*[contains(@class, 'wishlist-items-wrapper')]//td[6]"));
+        addToCartButton.click();
+        wait.until(ExpectedConditions.presenceOfElementLocated(viewMyCartButton));
+        driver.findElement(viewMyCartButton).click();
+
+        return new pageObjects.CartPage(driver);
     }
 }
