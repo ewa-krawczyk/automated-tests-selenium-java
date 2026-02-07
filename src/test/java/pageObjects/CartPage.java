@@ -6,12 +6,12 @@ import org.openqa.selenium.WebDriver;
 public class CartPage extends pageObjects.BasePage {
 
     private By productItem = By.cssSelector("tr.cart_item");
-
     private By quantityField = By.cssSelector("input.qty");
-
     private By updateCartButton = By.cssSelector("[name=update_cart]");
-
     private By totalPrice = By.cssSelector("[data-title=Total]");
+    private By productName = By.xpath("//td[contains(@class, 'product-name')]/a");
+    private By productQuantity = By.xpath("//td[contains(@class, 'quantity')]/div/input");
+
 
     public CartPage(WebDriver driver) {
         super(driver);
@@ -37,5 +37,13 @@ public class CartPage extends pageObjects.BasePage {
 
     public String getTotalPrice() {
         return driver.findElement(totalPrice).getText();
+    }
+
+    public String getProductTitle() {
+        return driver.findElement(productName).getText();
+    }
+
+    public String getProductQuantity() {
+        return driver.findElement(productQuantity).getAttribute("value");
     }
 }
